@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:utip/widgets/person_counter.dart';
+import 'package:utip/widgets/tip_slider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,6 +32,8 @@ class UTip extends StatefulWidget {
 
 class _UTipState extends State<UTip> {
   int _personCount = 1;
+
+  double _tipPercentage = 0.0;
 
   void increment() {
     setState(() {
@@ -104,23 +107,35 @@ class _UTipState extends State<UTip> {
                         'Split',
                         style: theme.textTheme.titleMedium,
                       ),
-                      Row(
-                        children: [
-                          IconButton(
-                              color: theme.colorScheme.primary,
-                              onPressed: decrement,
-                              icon: const Icon(Icons.remove)),
-                          Text(
-                            "$_personCount",
-                            style: theme.textTheme.titleMedium,
-                          ),
-                          IconButton(
-                              color: theme.colorScheme.primary,
-                              onPressed: increment,
-                              icon: const Icon(Icons.add)),
-                        ],
+                      PersonCounter(
+                        theme: theme,
+                        personCount: _personCount,
+                        onDecrement: decrement,
+                        onIncrement: increment,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Tip',
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      Text(
+                        "\$20",
+                        style: theme.textTheme.titleMedium,
                       )
                     ],
+                  ),
+                  Text('${(_tipPercentage * 100).round()}%'),
+                  TipSlider(
+                    tipPercentage: _tipPercentage,
+                    onChanged: (double value) {
+                      setState(() {
+                        _tipPercentage = value;
+                      });
+                    },
                   )
                 ],
               ),
