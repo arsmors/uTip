@@ -33,8 +33,16 @@ class UTip extends StatefulWidget {
 
 class _UTipState extends State<UTip> {
   int _personCount = 1;
-
   double _tipPercentage = 0.0;
+  double _billTotal = 0.0;
+
+  double totalPerPerson() {
+    return ((_billTotal * _tipPercentage) + (_billTotal)) / _personCount;
+  }
+
+  double totalTip() {
+    return ((_billTotal * _tipPercentage));
+  }
 
   void increment() {
     setState(() {
@@ -44,7 +52,7 @@ class _UTipState extends State<UTip> {
 
   void decrement() {
     setState(() {
-      if (_personCount > 0) {
+      if (_personCount > 1) {
         _personCount = _personCount - 1;
       }
     });
@@ -53,6 +61,8 @@ class _UTipState extends State<UTip> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    double total = totalPerPerson();
+    double totalT = totalTip();
     final style = theme.textTheme.titleMedium!.copyWith(
         color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold);
     return Scaffold(
@@ -74,7 +84,7 @@ class _UTipState extends State<UTip> {
                       style: style,
                     ),
                     Text(
-                      "\$23.89",
+                      "$total",
                       style: style.copyWith(
                           color: theme.colorScheme.onPrimary,
                           fontSize: theme.textTheme.displaySmall?.fontSize!),
@@ -93,9 +103,12 @@ class _UTipState extends State<UTip> {
               child: Column(
                 children: [
                   BillAmountField(
-                    billAmount: "100",
+                    billAmount: _billTotal.toString(),
                     onChanged: (value) {
-                      print("Amount: $value");
+                      setState(() {
+                        _billTotal = double.parse(value);
+                      });
+                      0;
                     },
                   ),
                   Row(
@@ -121,7 +134,7 @@ class _UTipState extends State<UTip> {
                         style: theme.textTheme.titleMedium,
                       ),
                       Text(
-                        "\$20",
+                        "$totalT",
                         style: theme.textTheme.titleMedium,
                       )
                     ],
